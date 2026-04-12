@@ -1,0 +1,18 @@
+# Virtual Environment
+venv/
+env/
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Large / Temporary / Uploads
+uploads/
+medicine_cnn_best.h5
+database.pkl
+
+# IDEs
+.vscode/
+.idea/
+*.swp

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Medicine Authentication</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>💊 Medicine Authentication</h1>
+            <p>Upload a medicine image to verify if it is <strong>genuine</strong> or <strong>counterfeit</strong></p>
+        </div>
+
+        <div class="upload-box" id="uploadBox">
+            <input type="file" id="fileInput" accept=".jpg,.jpeg,.png,.bmp,.webp" hidden />
+            <div class="upload-icon">📷</div>
+            <p>Click to upload or drag &amp; drop</p>
+            <small>JPG, PNG, BMP, WEBP — max 16 MB</small>
+            <button class="btn-upload" onclick="document.getElementById('fileInput').click()">
+                Choose Image
+            </button>
+        </div>
+
+        <div class="preview-section" id="previewSection" style="display:none">
+            <img id="previewImg" src="" alt="Preview" />
+            <button class="btn-predict" id="predictBtn" onclick="runPrediction()">
+                🔍 Analyse Medicine
+            </button>
+        </div>
+
+        <div class="result-card" id="resultCard" style="display:none">
+            <div class="result-badge" id="resultBadge"></div>
+            <div class="result-label" id="resultLabel"></div>
+
+            <div class="prob-bars">
+                <div class="prob-row">
+                    <span class="prob-name real">GENUINE</span>
+                    <div class="bar-track">
+                        <div class="bar-fill real" id="realBar"></div>
+                    </div>
+                    <span class="prob-value" id="realPct"></span>
+                </div>
+                <div class="prob-row">
+                    <span class="prob-name fake">COUNTERFEIT</span>
+                    <div class="bar-track">
+                        <div class="bar-fill fake" id="fakeBar"></div>
+                    </div>
+                    <span class="prob-value" id="fakePct"></span>
+                </div>
+            </div>
+
+            <button class="btn-reset" onclick="resetPage()">🔄 Check Another</button>
+        </div>
+
+        <div class="error-box" id="errorBox" style="display:none"></div>
+        <div class="loader" id="loader" style="display:none">Analysing image…</div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const previewSec = document.getElementById('previewSection');
+        const previewImg = document.getElementById('previewImg');
+        const resultCard = document.getElementById('resultCard');
+        const errorBox = document.getElementById('errorBox');
+        const loader = document.getElementById('loader');
+        const uploadBox = document.getElementById('uploadBox');
+
+        let selectedFile = null;
+
+        // ── File selection
+        fileInput.addEventListener('change', e => {
+            selectedFile = e.target.files[0];
+            if (!selectedFile) return;
+            previewImg.src = URL.createObjectURL(selectedFile);
+            previewSec.style.display = 'block';
+            resultCard.style.display = 'none';
+            errorBox.style.display = 'none';
+        });
+
+        // ── Drag and drop
+        uploadBox.addEventListener('dragover', e => { e.preventDefault(); uploadBox.classList.add('drag-over'); });
+        uploadBox.addEventListener('dragleave', () => uploadBox.classList.remove('drag-over'));
+        uploadBox.addEventListener('drop', e => {
+            e.preventDefault();
+            uploadBox.classList.remove('drag-over');
+            selectedFile = e.dataTransfer.files[0];
+            if (!selectedFile) return;
+            previewImg.src = URL.createObjectURL(selectedFile);
+            previewSec.style.display = 'block';
+            resultCard.style.display = 'none';
+            errorBox.style.display = 'none';
+        });
+
+        // ── Run prediction
+        async function runPrediction() {
+            if (!selectedFile) return;
+
+            loader.style.display = 'block';
+            resultCard.style.display = 'none';
+            errorBox.style.display = 'none';
+            document.getElementById('predictBtn').disabled = true;
+
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+
+            try {
+                const resp = await fetch('/predict', { method: 'POST', body: formData });
+                const data = await resp.json();
+
+                loader.style.display = 'none';
+                document.getElementById('predictBtn').disabled = false;
+
+                if (data.error) {
+                    errorBox.textContent = '⚠️ ' + data.error;
+                    errorBox.style.display = 'block';
+                    return;
+                }
+
+                showResult(data);
+
+            } catch (err) {
+                loader.style.display = 'none';
+                document.getElementById('predictBtn').disabled = false;
+                errorBox.textContent = '⚠️ Network error. Is the server running?';
+                errorBox.style.display = 'block';
+            }
+        }
+
+        function showResult(data) {
+            const isReal = data.is_real;
+
+            document.getElementById('resultBadge').textContent = isReal ? '✅ GENUINE' : '❌ COUNTERFEIT';
+            document.getElementById('resultBadge').className = 'result-badge ' + (isReal ? 'real' : 'fake');
+            document.getElementById('resultLabel').textContent =
+                `Confidence: ${data.confidence_pct}%`;
+
+            document.getElementById('realBar').style.width = data.real_prob_pct + '%';
+            document.getElementById('fakeBar').style.width = data.fake_prob_pct + '%';
+            document.getElementById('realPct').textContent = data.real_prob_pct + '%';
+            document.getElementById('fakePct').textContent = data.fake_prob_pct + '%';
+
+            resultCard.style.display = 'block';
+        }
+
+        function resetPage() {
+            selectedFile = null;
+            fileInput.value = '';
+            previewSec.style.display = 'none';
+            resultCard.style.display = 'none';
+            errorBox.style.display = 'none';
+            previewImg.src = '';
+        }
+    </script>
+
+</body>
+
+</html>
