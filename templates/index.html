@@ -12,7 +12,7 @@
 
     <div class="container">
         <div class="header">
-            <h1>💊 Medicine Authentication</h1>
+            <h1>Medicine Authentication</h1>
             <p>Upload a medicine image to verify if it is <strong>genuine</strong> or <strong>counterfeit</strong></p>
         </div>
 
@@ -29,7 +29,7 @@
         <div class="preview-section" id="previewSection" style="display:none">
             <img id="previewImg" src="" alt="Preview" />
             <button class="btn-predict" id="predictBtn" onclick="runPrediction()">
-                🔍 Analyse Medicine
+                Analyse Medicine
             </button>
         </div>
 
@@ -54,7 +54,7 @@
                 </div>
             </div>
 
-            <button class="btn-reset" onclick="resetPage()">🔄 Check Another</button>
+            <button class="btn-reset" onclick="resetPage()">Check Another</button>
         </div>
 
         <div class="error-box" id="errorBox" style="display:none"></div>
@@ -116,8 +116,14 @@
                 document.getElementById('predictBtn').disabled = false;
 
                 if (data.error) {
-                    errorBox.textContent = '⚠️ ' + data.error;
+                    // Show a friendly warning for validation failures (422)
+                    // and a red error for server failures (500)
+                    const icon = resp.status === 422 ? '⚠️' : '❌';
+                    errorBox.textContent = icon + ' ' + data.error;
                     errorBox.style.display = 'block';
+
+                    // Scroll to error so user sees it
+                    errorBox.scrollIntoView({ behavior: 'smooth' });
                     return;
                 }
 
@@ -126,7 +132,7 @@
             } catch (err) {
                 loader.style.display = 'none';
                 document.getElementById('predictBtn').disabled = false;
-                errorBox.textContent = '⚠️ Network error. Is the server running?';
+                errorBox.textContent = '❌ Network error. Is the server running?';
                 errorBox.style.display = 'block';
             }
         }
