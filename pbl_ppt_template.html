@@ -147,17 +147,22 @@
             <div class="grid md:grid-cols-3 gap-8">
                 <div class="glass p-8 rounded-3xl text-center">
                     <i class="fas fa-database text-blue-500 text-3xl mb-4"></i>
-                    <h3 class="font-bold mb-2 uppercase text-xs tracking-widest">Input / PUF Capture</h3>
-                    <p class="text-sm text-slate-500">Microscopic PUF patterns printed on medicine packaging and
-                        enrolled using
-                        high-resolution industrial imaging.</p>
+                    <h3 class="font-bold mb-2 uppercase text-xs tracking-widest">Image Acquisition</h3>
+                    <p class="text-sm text-slate-500">Medicine packaging images are collected from a labeled dataset containing real and counterfeit samples. These images are used for training and testing the CNN model, and during runtime, users upload images for verification..</p>
                 </div>
                 <div class="glass p-8 rounded-3xl text-center">
                     <i class="fas fa-microchip text-purple-500 text-3xl mb-4"></i>
                     <h3 class="font-bold mb-2 uppercase text-xs tracking-widest">Architecture</h3>
-                    <p class="text-sm text-slate-500">Three-layer system: Manufacturer enrollment → Secure cloud matcher
-                        →
-                        Consumer mobile verification (offline + online modes).</p>
+                    <p class="text-sm text-slate-500">
+The system follows a three-layer architecture:
+<br>
+
+• <strong>Dataset & Training Layer:</strong> A CNN model is trained using labeled real and fake medicine images.<br>
+
+• <strong>Backend Processing Layer:</strong> The trained model is integrated with a Flask backend to handle image input and prediction.<br>
+
+• <strong>User Interface Layer:</strong> A web-based frontend allows users to upload images and view authentication results in real time.
+</p>
                 </div>
                 <div class="glass p-8 rounded-3xl text-center border-2 border-green-500/20 bg-green-500/5">
                     <i class="fab fa-python text-green-500 text-3xl mb-4"></i>
@@ -184,19 +189,16 @@
                 </div>
 
                 <div class="glass p-8 rounded-3xl">
-                    <h3 class="text-green-400 font-bold mb-4 uppercase text-xs tracking-widest">PUF Verification
-                        (OpenCV)</h3>
+                    <h3 class="text-green-400 font-bold mb-4 uppercase text-xs tracking-widest">CNN-Based Verification</h3>
                     <p class="text-sm text-slate-400">
-                        Used OpenCV to extract unique features from captured PUF images and compare them
-                        with stored references using image similarity techniques.
+                        A Convolutional Neural Network (CNN) is used to classify medicine images as real or fake. The model is trained on labeled data and automatically learns features like texture, edges, and print quality. During verification, the uploaded image is passed to the CNN, which predicts whether it is genuine or counterfeit.
                     </p>
                 </div>
 
                 <div class="glass p-8 rounded-3xl">
                     <h3 class="text-green-400 font-bold mb-4 uppercase text-xs tracking-widest">Database</h3>
                     <p class="text-sm text-slate-400">
-                        Lightweight database using Python pickle files to store enrolled PUF signatures
-                        and associated product data.
+                        A labeled dataset of real and counterfeit medicine images is used, sourced from Kaggle. The dataset is organized into separate categories (real and fake) and is used for training and testing the CNN model. This structured dataset enables the model to learn distinguishing features and perform accurate classification.
                     </p>
                 </div>
 
@@ -214,8 +216,7 @@
         <section class="glass p-10 rounded-[2.5rem]">
             <h2 class="text-3xl font-extrabold mb-6 text-center">System Workflow</h2>
             <p class="text-slate-400 text-center max-w-3xl mx-auto">
-                Manufacturer captures PUF → stores in database → user scans medicine → system verifies using OpenCV →
-                result displayed.
+                Dataset is used to train CNN model → user uploads medicine image → system processes image → CNN model classifies → result displayed
             </p>
         </section>
 
