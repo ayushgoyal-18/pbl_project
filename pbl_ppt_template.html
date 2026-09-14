@@ -4,37 +4,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PBL Presentation | 2026</title>
+    <title>PUF MedAuth | PBL 2026</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
 
-        body {
-            background-color: #020617;
-            color: #f8fafc;
-            font-family: 'Plus Jakarta Sans', sans-serif;
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+        html {
             scroll-behavior: smooth;
         }
 
+        body {
+            background:
+                radial-gradient(circle at 15% 5%, rgba(59, 130, 246, .12), transparent 28%),
+                radial-gradient(circle at 85% 20%, rgba(168, 85, 247, .10), transparent 28%),
+                #020617;
+            color: #f8fafc;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
         .glass {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(15, 23, 42, .72);
+            backdrop-filter: blur(18px);
+            border: 1px solid rgba(148, 163, 184, .16);
+            box-shadow: 0 18px 60px rgba(0, 0, 0, .18);
+        }
+
+        .hero-grid {
+            background-image:
+                linear-gradient(rgba(148, 163, 184, .055) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(148, 163, 184, .055) 1px, transparent 1px);
+            background-size: 42px 42px;
         }
 
         .gradient-text {
-            background: linear-gradient(90deg, #60a5fa, #a855f7);
+            background: linear-gradient(90deg, #60a5fa, #c084fc);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        /* TIMER UI - FIXED CONTRAST */
+        .section-label {
+            color: #60a5fa;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: .25em;
+            text-transform: uppercase;
+        }
+
+        .metric {
+            border: 1px solid rgba(96, 165, 250, .18);
+            background: rgba(59, 130, 246, .055);
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 19px;
+            top: 42px;
+            bottom: 10px;
+            width: 2px;
+            background: linear-gradient(#3b82f6, #a855f7);
+            opacity: .45;
+        }
+
+        .timeline-dot {
+            position: relative;
+            z-index: 2;
+            width: 38px;
+            height: 38px;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #0f172a;
+            border: 2px solid #3b82f6;
+            color: #60a5fa;
+            flex-shrink: 0;
+        }
+
+        .flow-card {
+            background: rgba(30, 41, 59, .55);
+            border: 1px solid rgba(148, 163, 184, .16);
+        }
+
+        .chip {
+            border: 1px solid rgba(96, 165, 250, .22);
+            background: rgba(59, 130, 246, .07);
+        }
+
         #timerContainer {
-            background: #ffffff;
+            background: #fff;
             color: #020617;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, .8);
             border: 3px solid #3b82f6;
             z-index: 1000;
         }
@@ -43,7 +106,7 @@
 
             0%,
             100% {
-                background-color: #ffffff;
+                background-color: #fff;
             }
 
             50% {
@@ -59,7 +122,7 @@
 
         .timer-stop {
             background-color: #991b1b !important;
-            color: #ffffff !important;
+            color: #fff !important;
             border: 3px solid #f87171 !important;
             animation: none;
         }
@@ -68,312 +131,937 @@
 
 <body onload="startTimer()">
 
+    <!-- PRESENTATION TIMER -->
     <div id="timerContainer"
-        class="fixed bottom-10 right-10 px-8 py-4 rounded-3xl flex items-center gap-4 transition-all">
-        <i class="fas fa-hourglass-start text-blue-600 text-2xl" id="timerIcon"></i>
-        <span id="displayTime" class="text-4xl font-black font-mono tracking-tighter">00:00</span>
+        class="fixed bottom-7 right-7 px-6 py-3 rounded-3xl flex items-center gap-3 transition-all">
+        <i class="fas fa-hourglass-start text-blue-600 text-xl" id="timerIcon"></i>
+        <span id="displayTime" class="text-3xl font-black font-mono tracking-tighter">00:00</span>
     </div>
 
-    <nav class="fixed w-full z-50 glass border-b border-slate-800/50 px-8 py-4 flex justify-between items-center">
-        <div class="flex items-center gap-4">
-            <div class="bg-white p-1 rounded flex items-center justify-center shadow-md"
-                style="height: 48px; width: 48px;">
-                <img src="mujlogo.jpg" alt="MUJ" class="h-full w-auto object-contain"
-                    onerror="this.src='https://via.placeholder.com/50?text=MUJ'">
+    <!-- NAVIGATION -->
+    <nav class="fixed top-0 w-full z-50 glass border-b border-slate-800/60 px-6 md:px-10 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <div class="bg-white p-1 rounded-lg flex items-center justify-center shadow-md"
+                    style="height:46px;width:46px;">
+                    <img src="mujlogo.jpg" alt="Manipal University Jaipur" class="h-full w-auto object-contain"
+                        onerror="this.style.display='none'">
+                </div>
+                <div>
+                    <div class="text-lg font-black uppercase tracking-tight">
+                        PUF <span class="text-blue-500">MedAuth</span>
+                    </div>
+                    <div class="text-[9px] text-slate-400 font-bold uppercase tracking-[.18em]">
+                        PBL 2026 • CSE • MUJ
+                    </div>
+                </div>
             </div>
-            <div class="flex flex-col text-left">
-                <span class="text-xl font-black text-white leading-none uppercase tracking-tighter">PBL <span
-                        class="text-blue-500 italic">2026</span></span>
-                <span class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-1">Dept. of Computer
-                    Science & Engineering</span>
+
+            <div class="hidden lg:flex gap-7 text-[10px] uppercase tracking-widest font-bold text-slate-400">
+                <a href="#overview" class="hover:text-blue-400">Overview</a>
+                <a href="#problem" class="hover:text-blue-400">Problem</a>
+                <a href="#solution" class="hover:text-blue-400">Solution</a>
+                <a href="#security" class="hover:text-blue-400">Security</a>
+                <a href="#validation" class="hover:text-blue-400">Validation</a>
+                <a href="#patent" class="hover:text-blue-400">Patent</a>
+                <a href="#team" class="hover:text-blue-400">Team</a>
             </div>
-        </div>
-        <div class="hidden md:flex gap-8 text-[11px] uppercase tracking-widest font-bold opacity-70">
-            <a href="#problem" class="hover:text-blue-400 transition">Problem</a>
-            <a href="#methodology" class="hover:text-blue-400 transition">Methodology</a>
-            <a href="#results" class="hover:text-blue-400 transition">Results</a>
-            <a href="#team" class="hover:text-blue-400 transition">Team</a>
         </div>
     </nav>
 
-    <main class="max-w-6xl mx-auto px-6 pt-48 pb-32 space-y-32">
+    <main class="max-w-7xl mx-auto px-6 md:px-10 pt-40 pb-28 space-y-28">
 
-        <section class="text-center">
+        <!-- HERO -->
+        <section id="overview"
+            class="hero-grid rounded-[3rem] border border-slate-800/70 p-8 md:p-16 text-center overflow-hidden">
+            <div class="section-label mb-5">Pharmaceutical Anti-Counterfeiting • Software Prototype</div>
+
             <div
-                class="inline-block px-4 py-1 border border-slate-800 rounded-full text-slate-500 text-[10px] font-mono mb-6 uppercase tracking-widest">
-                ID: 2427030630</div>
-            <h1 class="text-6xl md:text-7xl font-extrabold mb-8 uppercase leading-tight"><span
-                    class="gradient-text uppercase">Physically Unclonable Function (PUF)</span></h1>
-            <p
-                class="text-slate-400 max-w-2xl mx-auto italic text-lg leading-relaxed border-l-2 border-blue-500/30 pl-6 text-left">
-                "Tackling Spurious and Counterfeit Medicines using a Secure, Low-Cost Authentication Framework"
-            </p>
-        </section>
-
-        <section id="problem" class="grid md:grid-cols-2 gap-12 items-stretch">
-            <div class="glass p-10 rounded-[2.5rem] flex flex-col justify-center border-l-4 border-blue-600">
-                <h2 class="text-3xl font-extrabold mb-6">Problem Statement</h2>
-                <p class="text-slate-400 leading-relaxed text-justify">Counterfeit medicines mimic genuine
-                    pharmaceutical products but may contain incorrect,
-                    substandard, or harmful ingredients. Existing solutions such as QR codes and holograms
-                    are easily replicable. The objective is to design a low-cost, physically unclonable,
-                    and scalable authentication system suitable for the Indian pharmaceutical supply chain.
-                </p>
-                </p>
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-full chip text-[10px] font-bold uppercase tracking-widest text-blue-300 mb-7">
+                <i class="fas fa-shield-halved"></i>
+                Project ID: 2427030630
             </div>
-            <div class="space-y-6">
-                <div class="glass p-7 rounded-3xl border-r-4 border-blue-500/50">
-                    <h3 class="text-blue-400 font-bold text-xs uppercase tracking-widest mb-2">Literature Review /
-                        Market Research</h3>
-                    <p class="text-sm text-slate-500 italic">Studies from WHO and Nature Communications indicate that
-                        traditional identifiers
-                        authenticate data but not the physical product. Physical Unclonable Functions (PUFs)
-                        provide hardware-level security derived from microscopic randomness.</p>
-                </div>
-                <div class="glass p-7 rounded-3xl border-r-4 border-purple-500/50">
-                    <h3 class="text-purple-400 font-bold text-xs uppercase tracking-widest mb-2">Research Gap /
-                        Innovation</h3>
-                    <p class="text-sm text-slate-500 italic">The proposed system binds authentication to the physical
-                        structure of the medicine
-                        packaging using PUF patterns, enabling smartphone-based verification that is
-                        resistant to cloning and economically viable for large-scale deployment in India.</p>
-                </div>
-            </div>
-        </section>
 
-        <section id="methodology" class="space-y-12">
-            <h2 class="text-4xl font-black text-center uppercase tracking-tight">System <span
-                    class="text-blue-500">Methodology</span></h2>
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="glass p-8 rounded-3xl text-center">
-                    <i class="fas fa-database text-blue-500 text-3xl mb-4"></i>
-                    <h3 class="font-bold mb-2 uppercase text-xs tracking-widest">Image Acquisition</h3>
-                    <p class="text-sm text-slate-500">Medicine packaging images are collected from a labeled dataset containing real and counterfeit samples. These images are used for training and testing the CNN model, and during runtime, users upload images for verification..</p>
-                </div>
-                <div class="glass p-8 rounded-3xl text-center">
-                    <i class="fas fa-microchip text-purple-500 text-3xl mb-4"></i>
-                    <h3 class="font-bold mb-2 uppercase text-xs tracking-widest">Architecture</h3>
-                    <p class="text-sm text-slate-500">
-The system follows a three-layer architecture:
-<br>
+            <h1 class="text-5xl md:text-7xl font-black uppercase leading-[.95] tracking-tight">
+                <span class="gradient-text">PUF MedAuth</span>
+            </h1>
 
-• <strong>Dataset & Training Layer:</strong> A CNN model is trained using labeled real and fake medicine images.<br>
-
-• <strong>Backend Processing Layer:</strong> The trained model is integrated with a Flask backend to handle image input and prediction.<br>
-
-• <strong>User Interface Layer:</strong> A web-based frontend allows users to upload images and view authentication results in real time.
-</p>
-                </div>
-                <div class="glass p-8 rounded-3xl text-center border-2 border-green-500/20 bg-green-500/5">
-                    <i class="fab fa-python text-green-500 text-3xl mb-4"></i>
-                    <h3 class="font-bold mb-4 uppercase text-xs tracking-widest text-green-400">Live Execution</h3>
-                    <a href="https://github.com/ayushgoyal-18/pbl_project" target="_blank"
-                        class="px-6 py-2 bg-green-600 rounded-full text-[10px] font-black hover:bg-green-500 transition shadow-lg shadow-green-900/40">VIEW
-                        CODE / DEMO</a>
-                </div>
-            </div>
-        </section>
-        <section id="implementation" class="space-y-12">
-            <h2 class="text-4xl font-black text-center uppercase tracking-tight">
-                System <span class="text-green-500">Implementation</span>
+            <h2 class="text-xl md:text-2xl font-bold mt-7 text-slate-200">
+                A Hybrid Pharmaceutical Authentication Framework
             </h2>
 
-            <div class="grid md:grid-cols-2 gap-10">
-
-                <div class="glass p-8 rounded-3xl">
-                    <h3 class="text-green-400 font-bold mb-4 uppercase text-xs tracking-widest">Backend (Flask)</h3>
-                    <p class="text-sm text-slate-400">
-                        Developed a Flask-based backend to handle image uploads, routing, and authentication logic.
-                        Implemented APIs for enrollment and verification of PUF patterns.
-                    </p>
-                </div>
-
-                <div class="glass p-8 rounded-3xl">
-                    <h3 class="text-green-400 font-bold mb-4 uppercase text-xs tracking-widest">CNN-Based Verification</h3>
-                    <p class="text-sm text-slate-400">
-                        A Convolutional Neural Network (CNN) is used to classify medicine images as real or fake. The model is trained on labeled data and automatically learns features like texture, edges, and print quality. During verification, the uploaded image is passed to the CNN, which predicts whether it is genuine or counterfeit.
-                    </p>
-                </div>
-
-                <div class="glass p-8 rounded-3xl">
-                    <h3 class="text-green-400 font-bold mb-4 uppercase text-xs tracking-widest">Database</h3>
-                    <p class="text-sm text-slate-400">
-                        A labeled dataset of real and counterfeit medicine images is used, sourced from Kaggle. The dataset is organized into separate categories (real and fake) and is used for training and testing the CNN model. This structured dataset enables the model to learn distinguishing features and perform accurate classification.
-                    </p>
-                </div>
-
-                <div class="glass p-8 rounded-3xl">
-                    <h3 class="text-green-400 font-bold mb-4 uppercase text-xs tracking-widest">Frontend</h3>
-                    <p class="text-sm text-slate-400">
-                        Interactive frontend built using HTML, Tailwind CSS, and JavaScript
-                        to upload images and display authentication results in real time.
-                    </p>
-                </div>
-
-            </div>
-        </section>
-
-        <section class="glass p-10 rounded-[2.5rem]">
-            <h2 class="text-3xl font-extrabold mb-6 text-center">System Workflow</h2>
-            <p class="text-slate-400 text-center max-w-3xl mx-auto">
-                Dataset is used to train CNN model → user uploads medicine image → system processes image → CNN model classifies → result displayed
+            <p class="max-w-4xl mx-auto mt-5 text-slate-400 leading-relaxed">
+                Combining <strong class="text-slate-200">QR serialization</strong> with a
+                <strong class="text-slate-200">cryptographically bound, software-generated optical fingerprint</strong>
+                to authenticate pharmaceutical packages using ordinary camera images.
             </p>
-        </section>
 
-        <section id="research" class="space-y-12">
-            <h2 class="text-4xl font-black text-center uppercase tracking-tight">
-                Research <span class="text-purple-500">Insights</span>
-            </h2>
+            <div class="flex flex-wrap justify-center gap-3 mt-8">
+                <span class="chip px-4 py-2 rounded-full text-xs text-blue-300">QR Serialization</span>
+                <span class="chip px-4 py-2 rounded-full text-xs text-blue-300">HMAC-SHA256</span>
+                <span class="chip px-4 py-2 rounded-full text-xs text-blue-300">Computer Vision</span>
+                <span class="chip px-4 py-2 rounded-full text-xs text-blue-300">Multi-Scale NCC</span>
+                <span class="chip px-4 py-2 rounded-full text-xs text-blue-300">ORB + RANSAC</span>
+            </div>
 
-            <!-- WHAT YOU ANALYSED -->
-            <div class="glass p-8 rounded-3xl">
-                <h3 class="text-purple-400 font-bold mb-4 uppercase text-xs tracking-widest">
-                    Parameters Analysed
-                </h3>
-
-                <div class="grid md:grid-cols-2 gap-4 text-sm text-slate-400">
-                    <p>• Author & Publish Date</p>
-                    <p>• Dataset Availability</p>
-                    <p>• Contribution / Methodology</p>
-                    <p>• Strength (Problem Solved)</p>
-                    <p>• Algorithm Used</p>
-                    <p>• Evaluation Process</p>
-                    <p>• Limitations</p>
+            <div class="grid sm:grid-cols-3 gap-4 mt-12 max-w-4xl mx-auto">
+                <div class="metric rounded-2xl p-5">
+                    <div class="text-3xl font-black text-blue-400">V2</div>
+                    <div class="text-[10px] uppercase tracking-widest text-slate-500 mt-1">Cryptographic design</div>
                 </div>
-            </div>
-
-            <!-- INSIGHTS -->
-            <div class="glass p-8 rounded-3xl">
-                <h3 class="text-purple-400 font-bold mb-4 uppercase text-xs tracking-widest">
-                    Key Observations from 20+ Papers
-                </h3>
-
-                <ul class="space-y-4 text-sm text-slate-400 leading-relaxed">
-
-                    <li>
-                        • Most PUF-based systems provide strong uniqueness but are vulnerable
-                        to machine learning attacks if not properly protected.
-                    </li>
-
-                    <li>
-                        • Many approaches require complex error correction mechanisms,
-                        increasing computational overhead.
-                    </li>
-
-                    <li>
-                        • A large number of research works focus on silicon-based PUFs,
-                        which are not suitable for low-cost pharmaceutical applications.
-                    </li>
-
-                    <li>
-                        • Very few studies address real-world deployment in supply chains,
-                        especially in the pharmaceutical sector.
-                    </li>
-
-                    <li>
-                        • Image-based or optical PUF approaches offer a promising low-cost
-                        alternative but suffer from environmental sensitivity (lighting, noise).
-                    </li>
-
-                    <li>
-                        • Existing evaluation methods lack standardization and often rely on
-                        controlled lab conditions rather than real-world scenarios.
-                    </li>
-
-                </ul>
-                <p class="text-center text-slate-500 italic">
-                    Detailed comparative analysis maintained in Excel for reference.
-                </p>
-            </div>
-        </section>
-
-        <section id="results" class="glass p-12 rounded-[3.5rem] border-t-4 border-blue-500">
-            <h2 class="text-3xl font-black mb-12 text-center uppercase tracking-tight">Results & <span
-                    class="text-blue-500">Analysis</span></h2>
-            <div class="grid md:grid-cols-2 gap-16 items-center">
-                <div class="h-80"><canvas id="resultsChart"></canvas></div>
-                <div class="space-y-6">
-                    <div
-                        class="p-6 rounded-2xl bg-white/5 flex justify-between items-center border border-white/10 shadow-inner">
-                        <span class="text-blue-400 font-mono font-black text-3xl">Prototype Working</span>
+                <div class="metric rounded-2xl p-5">
+                    <div class="text-3xl font-black text-purple-400">19/19</div>
+                    <div class="text-[10px] uppercase tracking-widest text-slate-500 mt-1">Predefined validation tests
                     </div>
-                    <<p class="text-slate-500 text-sm italic text-justify leading-relaxed">
-                        The implemented prototype successfully demonstrates PUF-based authentication using image
-                        processing.
-                        The system is capable of distinguishing between enrolled and non-enrolled patterns,
-                        validating the feasibility of using PUFs for counterfeit detection.
-                        </p>
+                </div>
+                <div class="metric rounded-2xl p-5">
+                    <div class="text-3xl font-black text-emerald-400">1:1 + 1:N</div>
+                    <div class="text-[10px] uppercase tracking-widest text-slate-500 mt-1">Verification modes</div>
+                </div>
+            </div>
+
+            <p class="text-[10px] text-slate-500 mt-7 max-w-3xl mx-auto">
+                Important terminology: the current implementation is a
+                <strong class="text-slate-400">software-generated / PUF-inspired optical fingerprint</strong>,
+                not a physical PUF. The project does not claim physical unclonability.
+            </p>
+        </section>
+
+        <!-- PROBLEM -->
+        <section id="problem" class="space-y-10">
+            <div class="text-center">
+                <div class="section-label">01 • Motivation</div>
+                <h2 class="text-4xl md:text-5xl font-black mt-3">The Problem</h2>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-8">
+                <div class="glass rounded-[2.5rem] p-8 md:p-10 border-l-4 border-blue-500">
+                    <h3 class="text-2xl font-extrabold mb-5">Why QR Alone Is Not Enough</h3>
+                    <p class="text-slate-400 leading-relaxed">
+                        A QR code is excellent for serialization and identifying a product or package,
+                        but a visible QR code can be photographed, copied and reproduced. Therefore,
+                        possession of the same public identifier does not by itself prove that the
+                        presented package corresponds to the enrolled reference.
+                    </p>
+                    <div class="mt-7 grid grid-cols-2 gap-3">
+                        <div class="flow-card rounded-2xl p-4">
+                            <i class="fas fa-qrcode text-blue-400"></i>
+                            <p class="text-xs font-bold mt-2">Public identifier</p>
+                            <p class="text-[10px] text-slate-500 mt-1">Useful for serialization</p>
+                        </div>
+                        <div class="flow-card rounded-2xl p-4">
+                            <i class="fas fa-copy text-red-400"></i>
+                            <p class="text-xs font-bold mt-2">Easy to reproduce</p>
+                            <p class="text-[10px] text-slate-500 mt-1">Copying remains possible</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass rounded-[2.5rem] p-8 md:p-10 border-l-4 border-purple-500">
+                    <h3 class="text-2xl font-extrabold mb-5">Project Objective</h3>
+                    <p class="text-slate-400 leading-relaxed">
+                        Develop a low-cost, software-controlled authentication mechanism where a copied
+                        public serialization value is insufficient to directly reproduce the enrolled
+                        Version-2 optical reference, while verification remains practical from ordinary
+                        package photographs.
+                    </p>
+                    <div class="mt-7 flex flex-wrap gap-2">
+                        <span class="chip px-3 py-2 rounded-xl text-[10px]">Low-cost</span>
+                        <span class="chip px-3 py-2 rounded-xl text-[10px]">Camera-based</span>
+                        <span class="chip px-3 py-2 rounded-xl text-[10px]">Package-specific</span>
+                        <span class="chip px-3 py-2 rounded-xl text-[10px]">Cryptographically bound</span>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <section id="team" class="text-center pt-10 border-t border-slate-900">
-            <h2 class="text-[10px] font-black text-slate-600 uppercase tracking-[0.5em] mb-12">Academic Credits</h2>
-            <div class="flex flex-wrap justify-center gap-10">
-                <div class="glass px-12 py-8 rounded-[2rem] border-b-4 border-blue-600">
-                    <p class="text-[9px] font-bold text-blue-500 mb-2 uppercase tracking-widest">Guide Name</p>
-                    <p class="font-black text-xl text-slate-100">Dr Vaishali Chauhan</p>
+        <!-- SOLUTION -->
+        <section id="solution" class="space-y-10">
+            <div class="text-center">
+                <div class="section-label">02 • Proposed Framework</div>
+                <h2 class="text-4xl md:text-5xl font-black mt-3">
+                    How <span class="gradient-text">PUF MedAuth</span> Works
+                </h2>
+                <p class="text-slate-500 max-w-3xl mx-auto mt-4">
+                    The system separates public package serialization from the secret-bound optical
+                    authentication signal.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 xl:grid-cols-4 gap-5">
+                <div class="glass rounded-3xl p-7">
+                    <div class="timeline-dot"><i class="fas fa-box-open"></i></div>
+                    <div class="text-[10px] text-blue-400 font-black uppercase tracking-widest mt-6">Step 01</div>
+                    <h3 class="font-bold text-lg mt-2">Package Enrollment</h3>
+                    <p class="text-sm text-slate-500 mt-3 leading-relaxed">
+                        Product metadata and a package-specific authentication identifier are registered
+                        in the reference database.
+                    </p>
                 </div>
-                <div class="glass px-12 py-8 rounded-[2rem] border-b-4 border-slate-700">
-                    <p class="text-[9px] font-bold text-slate-400 mb-2 uppercase tracking-widest">Team</p>
-                    <p class="font-black text-xl text-slate-100">Ayush Goyal</p>
-                    <p class="text-[10px] text-slate-500 mt-1">2427030630</p>
+
+                <div class="glass rounded-3xl p-7">
+                    <div class="timeline-dot"><i class="fas fa-key"></i></div>
+                    <div class="text-[10px] text-blue-400 font-black uppercase tracking-widest mt-6">Step 02</div>
+                    <h3 class="font-bold text-lg mt-2">Cryptographic Binding</h3>
+                    <p class="text-sm text-slate-500 mt-3 leading-relaxed">
+                        Product ID and the unique Package Auth ID are bound to a server-held secret
+                        through HMAC-SHA256.
+                    </p>
+                </div>
+
+                <div class="glass rounded-3xl p-7">
+                    <div class="timeline-dot"><i class="fas fa-fingerprint"></i></div>
+                    <div class="text-[10px] text-blue-400 font-black uppercase tracking-widest mt-6">Step 03</div>
+                    <h3 class="font-bold text-lg mt-2">Optical Fingerprint</h3>
+                    <p class="text-sm text-slate-500 mt-3 leading-relaxed">
+                        A deterministic 200 × 200 intensity pattern is generated from the derived seed,
+                        smoothed, normalized and placed on the printable label.
+                    </p>
+                </div>
+
+                <div class="glass rounded-3xl p-7">
+                    <div class="timeline-dot"><i class="fas fa-camera"></i></div>
+                    <div class="text-[10px] text-blue-400 font-black uppercase tracking-widest mt-6">Step 04</div>
+                    <h3 class="font-bold text-lg mt-2">Camera Verification</h3>
+                    <p class="text-sm text-slate-500 mt-3 leading-relaxed">
+                        The uploaded image is normalized, rectified and compared against the enrolled
+                        optical reference before the final authentication decision.
+                    </p>
+                </div>
+            </div>
+
+            <div class="glass rounded-[2.5rem] p-8 md:p-10">
+                <div class="grid lg:grid-cols-5 gap-4 items-center">
+                    <div class="flow-card rounded-2xl p-5 text-center">
+                        <i class="fas fa-id-card text-blue-400 text-xl"></i>
+                        <p class="text-xs font-bold mt-2">Product ID</p>
+                        <p class="text-[10px] text-slate-500">Public identifier</p>
+                    </div>
+                    <div class="text-center text-blue-400 text-xl hidden lg:block">→</div>
+                    <div class="flow-card rounded-2xl p-5 text-center">
+                        <i class="fas fa-shield-keyhole text-purple-400 text-xl"></i>
+                        <p class="text-xs font-bold mt-2">Package Auth ID</p>
+                        <p class="text-[10px] text-slate-500">128-bit random value</p>
+                    </div>
+                    <div class="text-center text-blue-400 text-xl hidden lg:block">→</div>
+                    <div class="flow-card rounded-2xl p-5 text-center">
+                        <i class="fas fa-lock text-emerald-400 text-xl"></i>
+                        <p class="text-xs font-bold mt-2">HMAC-SHA256</p>
+                        <p class="text-[10px] text-slate-500">Server-secret binding</p>
+                    </div>
+                </div>
+
+                <div class="flex justify-center my-5 text-slate-600">
+                    <i class="fas fa-arrow-down"></i>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-4">
+                    <div class="flow-card rounded-2xl p-5">
+                        <p class="section-label">Derived</p>
+                        <p class="font-bold mt-2">Deterministic seed</p>
+                        <p class="text-[10px] text-slate-500 mt-1">Derived from HMAC digest</p>
+                    </div>
+                    <div class="flow-card rounded-2xl p-5">
+                        <p class="section-label">Generated</p>
+                        <p class="font-bold mt-2">200 × 200 optical pattern</p>
+                        <p class="text-[10px] text-slate-500 mt-1">PRNG + smoothing + normalization</p>
+                    </div>
+                    <div class="flow-card rounded-2xl p-5">
+                        <p class="section-label">Serialized</p>
+                        <p class="font-bold mt-2">QR + fingerprint label</p>
+                        <p class="text-[10px] text-slate-500 mt-1">Package-specific printable artifact</p>
+                    </div>
                 </div>
             </div>
         </section>
+
+        <!-- TECHNICAL IMPLEMENTATION -->
+        <section id="technical" class="space-y-10">
+            <div class="text-center">
+                <div class="section-label">03 • Technical Implementation</div>
+                <h2 class="text-4xl md:text-5xl font-black mt-3">Engineering the Prototype</h2>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-8">
+                <div class="glass rounded-[2.5rem] p-8">
+                    <h3 class="text-xl font-extrabold flex items-center gap-3">
+                        <i class="fas fa-server text-blue-400"></i>
+                        Backend & Data Layer
+                    </h3>
+                    <ul class="mt-6 space-y-4 text-sm text-slate-400">
+                        <li><i class="fas fa-check text-blue-400 mr-2"></i>Python + Flask application backend</li>
+                        <li><i class="fas fa-check text-blue-400 mr-2"></i>SQLite reference database for enrolled
+                            packages and verification history</li>
+                        <li><i class="fas fa-check text-blue-400 mr-2"></i>Separate Version-1 and Version-2 fingerprint
+                            metadata</li>
+                        <li><i class="fas fa-check text-blue-400 mr-2"></i>Manufacturer enrollment and verification
+                            workflows</li>
+                        <li><i class="fas fa-check text-blue-400 mr-2"></i>Audit/history and reporting support</li>
+                    </ul>
+                </div>
+
+                <div class="glass rounded-[2.5rem] p-8">
+                    <h3 class="text-xl font-extrabold flex items-center gap-3">
+                        <i class="fas fa-code text-purple-400"></i>
+                        Frontend & User Experience
+                    </h3>
+                    <ul class="mt-6 space-y-4 text-sm text-slate-400">
+                        <li><i class="fas fa-check text-purple-400 mr-2"></i>HTML, CSS, JavaScript and Tailwind CSS</li>
+                        <li><i class="fas fa-check text-purple-400 mr-2"></i>Image upload and package verification
+                            interface</li>
+                        <li><i class="fas fa-check text-purple-400 mr-2"></i>QR serialization / label workflow</li>
+                        <li><i class="fas fa-check text-purple-400 mr-2"></i>Verification history and result
+                            presentation</li>
+                        <li><i class="fas fa-check text-purple-400 mr-2"></i>Explicit authentication outcomes for safer
+                            interpretation</li>
+                    </ul>
+                </div>
+
+                <div class="glass rounded-[2.5rem] p-8">
+                    <h3 class="text-xl font-extrabold flex items-center gap-3">
+                        <i class="fas fa-eye text-emerald-400"></i>
+                        Computer Vision Pipeline
+                    </h3>
+                    <div class="grid sm:grid-cols-2 gap-3 mt-6">
+                        <span class="chip rounded-xl p-3 text-xs">EXIF orientation normalization</span>
+                        <span class="chip rounded-xl p-3 text-xs">Label localization</span>
+                        <span class="chip rounded-xl p-3 text-xs">Fiducial marker detection</span>
+                        <span class="chip rounded-xl p-3 text-xs">Perspective correction</span>
+                        <span class="chip rounded-xl p-3 text-xs">Fingerprint extraction</span>
+                        <span class="chip rounded-xl p-3 text-xs">Multi-scale comparison</span>
+                        <span class="chip rounded-xl p-3 text-xs">Multi-orientation comparison</span>
+                        <span class="chip rounded-xl p-3 text-xs">ORB + RANSAC evidence</span>
+                    </div>
+                </div>
+
+                <div class="glass rounded-[2.5rem] p-8">
+                    <h3 class="text-xl font-extrabold flex items-center gap-3">
+                        <i class="fas fa-database text-amber-400"></i>
+                        Package & Label Design
+                    </h3>
+                    <ul class="mt-6 space-y-4 text-sm text-slate-400">
+                        <li><i class="fas fa-check text-amber-400 mr-2"></i>Current label canvas: 450 × 300 pixels</li>
+                        <li><i class="fas fa-check text-amber-400 mr-2"></i>Fingerprint block: 300 × 300 pixels</li>
+                        <li><i class="fas fa-check text-amber-400 mr-2"></i>Central optical pattern: 200 × 200 pixels
+                        </li>
+                        <li><i class="fas fa-check text-amber-400 mr-2"></i>Four square fiducial markers define
+                            canonical geometry</li>
+                        <li><i class="fas fa-check text-amber-400 mr-2"></i>V2 QR carries PRODUCT, AUTH, BATCH, NAME and
+                            V:2</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECURITY -->
+        <section id="security" class="space-y-10">
+            <div class="text-center">
+                <div class="section-label">04 • Security Upgrade</div>
+                <h2 class="text-4xl md:text-5xl font-black mt-3">
+                    Version 2 <span class="gradient-text">Cryptographic Binding</span>
+                </h2>
+                <p class="text-slate-500 max-w-3xl mx-auto mt-4">
+                    The major upgrade over the legacy Version-1 design is the introduction of
+                    package-specific, secret-bound fingerprint derivation.
+                </p>
+            </div>
+
+            <div class="grid lg:grid-cols-3 gap-5">
+                <div class="glass rounded-3xl p-7">
+                    <div class="text-blue-400 text-2xl"><i class="fas fa-random"></i></div>
+                    <h3 class="font-bold mt-4">128-bit Package Auth ID</h3>
+                    <p class="text-sm text-slate-500 mt-2 leading-relaxed">
+                        Each Version-2 package receives an independently generated 128-bit authentication
+                        identifier represented as 32 hexadecimal characters.
+                    </p>
+                </div>
+
+                <div class="glass rounded-3xl p-7">
+                    <div class="text-purple-400 text-2xl"><i class="fas fa-key"></i></div>
+                    <h3 class="font-bold mt-4">HMAC-SHA256</h3>
+                    <p class="text-sm text-slate-500 mt-2 leading-relaxed">
+                        The Product ID and Package Auth ID are combined and processed using a server-held
+                        secret as the HMAC key. The secret is not placed in the QR code.
+                    </p>
+                </div>
+
+                <div class="glass rounded-3xl p-7">
+                    <div class="text-emerald-400 text-2xl"><i class="fas fa-user-lock"></i></div>
+                    <h3 class="font-bold mt-4">Public / Secret Separation</h3>
+                    <p class="text-sm text-slate-500 mt-2 leading-relaxed">
+                        Public package data is separated from the secret used for Version-2 derivation,
+                        reducing direct offline regeneration from the visible serialization fields.
+                    </p>
+                </div>
+            </div>
+
+            <div class="glass rounded-[2.5rem] p-8 md:p-10">
+                <div class="text-center section-label mb-7">Version-2 derivation</div>
+                <div class="grid md:grid-cols-3 gap-4 text-center">
+                    <div class="flow-card rounded-2xl p-6">
+                        <p class="text-xs uppercase tracking-widest text-slate-500">Message</p>
+                        <p class="font-bold mt-3">Product ID | Package Auth ID</p>
+                    </div>
+                    <div class="flex items-center justify-center text-2xl text-blue-400">
+                        <i class="fas fa-plus hidden md:block"></i>
+                    </div>
+                    <div class="flow-card rounded-2xl p-6">
+                        <p class="text-xs uppercase tracking-widest text-slate-500">Secret key</p>
+                        <p class="font-bold mt-3">Server-held HMAC secret</p>
+                    </div>
+                </div>
+
+                <div class="flex justify-center my-5 text-blue-400 text-xl">
+                    <i class="fas fa-arrow-down"></i>
+                </div>
+
+                <div class="flow-card rounded-2xl p-7 text-center">
+                    <p class="text-lg font-black">HMAC-SHA256 → deterministic seed → seeded PRNG</p>
+                    <p class="text-sm text-slate-500 mt-2">
+                        200 × 200 intensity matrix → Gaussian smoothing → normalization →
+                        printable optical fingerprint
+                    </p>
+                </div>
+
+                <p class="text-center text-xs text-slate-500 mt-6">
+                    Security claim is deliberately limited: Version 2 makes direct mathematical regeneration
+                    from only public Product ID + Auth ID impractical without the server-held secret.
+                    It does <strong class="text-slate-400">not</strong> claim physical unclonability of a printed image.
+                </p>
+            </div>
+        </section>
+
+        <!-- VERIFICATION -->
+        <section class="space-y-10">
+            <div class="text-center">
+                <div class="section-label">05 • Authentication Engine</div>
+                <h2 class="text-4xl md:text-5xl font-black mt-3">Robust Optical Verification</h2>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-8">
+                <div class="glass rounded-[2.5rem] p-8">
+                    <h3 class="text-xl font-extrabold">Image Normalization</h3>
+                    <div class="space-y-4 mt-7">
+                        <div class="flex gap-4">
+                            <div class="timeline-dot"><i class="fas fa-mobile-screen"></i></div>
+                            <div>
+                                <p class="font-bold">EXIF correction</p>
+                                <p class="text-sm text-slate-500">Smartphone JPEG orientation is normalized before
+                                    computer-vision processing.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="timeline-dot"><i class="fas fa-vector-square"></i></div>
+                            <div>
+                                <p class="font-bold">Marker-constrained localization</p>
+                                <p class="text-sm text-slate-500">QR finder squares are not treated as the fingerprint
+                                    fiducials.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="timeline-dot"><i class="fas fa-expand"></i></div>
+                            <div>
+                                <p class="font-bold">Perspective rectification</p>
+                                <p class="text-sm text-slate-500">The detected package region is mapped to canonical
+                                    geometry before fingerprint extraction.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass rounded-[2.5rem] p-8">
+                    <h3 class="text-xl font-extrabold">Multi-Stage Comparison</h3>
+                    <div class="space-y-4 mt-7">
+                        <div class="flow-card rounded-2xl p-5">
+                            <div class="flex justify-between">
+                                <span class="font-bold">NCC</span>
+                                <span class="text-blue-400 font-black">Primary</span>
+                            </div>
+                            <p class="text-xs text-slate-500 mt-2">
+                                Evaluated at 10 spatial resolutions and 4 orthogonal orientations.
+                                The best valid value is retained.
+                            </p>
+                        </div>
+                        <div class="flow-card rounded-2xl p-5">
+                            <div class="flex justify-between">
+                                <span class="font-bold">ORB + RANSAC</span>
+                                <span class="text-purple-400 font-black">Secondary</span>
+                            </div>
+                            <p class="text-xs text-slate-500 mt-2">
+                                Feature correspondences and geometric consistency provide additional evidence.
+                            </p>
+                        </div>
+                        <div class="flow-card rounded-2xl p-5">
+                            <div class="flex justify-between">
+                                <span class="font-bold">Decision gate</span>
+                                <span class="text-emerald-400 font-black">Safety</span>
+                            </div>
+                            <p class="text-xs text-slate-500 mt-2">
+                                A weak NCC identity signal cannot be rescued by isolated ORB matches.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass rounded-[2.5rem] p-8">
+                <div class="grid md:grid-cols-4 gap-4 text-center">
+                    <div class="metric rounded-2xl p-5">
+                        <p class="text-[10px] uppercase tracking-widest text-slate-500">Fusion</p>
+                        <p class="text-2xl font-black mt-2">90 / 10</p>
+                        <p class="text-[10px] text-slate-500">NCC / ORB</p>
+                    </div>
+                    <div class="metric rounded-2xl p-5">
+                        <p class="text-[10px] uppercase tracking-widest text-slate-500">NCC floor</p>
+                        <p class="text-2xl font-black mt-2">0.25</p>
+                        <p class="text-[10px] text-slate-500">minimum identity signal</p>
+                    </div>
+                    <div class="metric rounded-2xl p-5">
+                        <p class="text-[10px] uppercase tracking-widest text-slate-500">Genuine threshold</p>
+                        <p class="text-2xl font-black mt-2">0.35</p>
+                        <p class="text-[10px] text-slate-500">current implementation</p>
+                    </div>
+                    <div class="metric rounded-2xl p-5">
+                        <p class="text-[10px] uppercase tracking-widest text-slate-500">Robust search</p>
+                        <p class="text-2xl font-black mt-2">10 × 4</p>
+                        <p class="text-[10px] text-slate-500">scales × orientations</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- OUTCOMES -->
+        <section class="space-y-10">
+            <div class="text-center">
+                <div class="section-label">06 • Decision Model</div>
+                <h2 class="text-4xl md:text-5xl font-black mt-3">Four Explicit Outcomes</h2>
+            </div>
+
+            <div class="grid sm:grid-cols-2 xl:grid-cols-4 gap-5">
+                <div class="glass rounded-3xl p-7 border-t-4 border-emerald-500">
+                    <i class="fas fa-circle-check text-emerald-400 text-2xl"></i>
+                    <h3 class="font-black text-lg mt-4">GENUINE</h3>
+                    <p class="text-sm text-slate-500 mt-2">A valid enrolled reference satisfies the authentication
+                        decision rule.</p>
+                </div>
+                <div class="glass rounded-3xl p-7 border-t-4 border-red-500">
+                    <i class="fas fa-circle-xmark text-red-400 text-2xl"></i>
+                    <h3 class="font-black text-lg mt-4">COUNTERFEIT</h3>
+                    <p class="text-sm text-slate-500 mt-2">A known product fails the optical authentication check.</p>
+                </div>
+                <div class="glass rounded-3xl p-7 border-t-4 border-amber-500">
+                    <i class="fas fa-magnifying-glass text-amber-400 text-2xl"></i>
+                    <h3 class="font-black text-lg mt-4">NO_MATCH</h3>
+                    <p class="text-sm text-slate-500 mt-2">Blind 1:N search finds no enrolled reference satisfying the
+                        decision rule.</p>
+                </div>
+                <div class="glass rounded-3xl p-7 border-t-4 border-slate-500">
+                    <i class="fas fa-triangle-exclamation text-slate-300 text-2xl"></i>
+                    <h3 class="font-black text-lg mt-4">UNABLE_TO_AUTHENTICATE</h3>
+                    <p class="text-sm text-slate-500 mt-2">The image cannot be reliably processed; it is not
+                        automatically labelled counterfeit.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- VALIDATION -->
+        <section id="validation" class="space-y-10">
+            <div class="text-center">
+                <div class="section-label">07 • Engineering Validation</div>
+                <h2 class="text-4xl md:text-5xl font-black mt-3">What Has Been Tested</h2>
+                <p class="text-slate-500 max-w-3xl mx-auto mt-4">
+                    The current project includes a dedicated Version-2 security and compatibility
+                    validation suite. These are engineering tests, not a statistically representative
+                    field-accuracy study.
+                </p>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-10 items-center">
+                <div class="glass rounded-[2.5rem] p-8">
+                    <div class="h-80">
+                        <canvas id="validationChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="glass rounded-2xl p-5 flex gap-4">
+                        <i class="fas fa-fingerprint text-blue-400 mt-1"></i>
+                        <div>
+                            <p class="font-bold">Deterministic derivation</p>
+                            <p class="text-sm text-slate-500">Same Product ID + Auth ID + secret produces the same
+                                Version-2 fingerprint.</p>
+                        </div>
+                    </div>
+                    <div class="glass rounded-2xl p-5 flex gap-4">
+                        <i class="fas fa-shuffle text-purple-400 mt-1"></i>
+                        <div>
+                            <p class="font-bold">Input sensitivity</p>
+                            <p class="text-sm text-slate-500">Changing Product ID, Auth ID or secret changes the
+                                generated fingerprint.</p>
+                        </div>
+                    </div>
+                    <div class="glass rounded-2xl p-5 flex gap-4">
+                        <i class="fas fa-qrcode text-emerald-400 mt-1"></i>
+                        <div>
+                            <p class="font-bold">QR security checks</p>
+                            <p class="text-sm text-slate-500">V2 QR fields round-trip correctly and the server secret is
+                                absent from the QR payload.</p>
+                        </div>
+                    </div>
+                    <div class="glass rounded-2xl p-5 flex gap-4">
+                        <i class="fas fa-code-compare text-amber-400 mt-1"></i>
+                        <div>
+                            <p class="font-bold">Wrong-match rejection</p>
+                            <p class="text-sm text-slate-500">Wrong Product ID, unrelated patterns and cross-version
+                                presentations are rejected in the test suite.</p>
+                        </div>
+                    </div>
+                    <div class="glass rounded-2xl p-5 flex gap-4">
+                        <i class="fas fa-shield-halved text-red-400 mt-1"></i>
+                        <div>
+                            <p class="font-bold">Secret leakage checks</p>
+                            <p class="text-sm text-slate-500">Verification JSON and public HTML responses are checked
+                                for absence of the server secret.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass rounded-[2rem] p-7 text-center">
+                <p class="text-emerald-400 font-black text-xl">19 / 19 predefined Version-2 validation tests passed</p>
+                <p class="text-xs text-slate-500 mt-2">
+                    This demonstrates implementation-level consistency of the tested mechanisms.
+                    It is not a claim of 100% real-world accuracy or resistance to every physical reproduction attack.
+                </p>
+            </div>
+        </section>
+
+        <!-- RESEARCH -->
+        <section id="research" class="space-y-10">
+            <div class="text-center">
+                <div class="section-label">08 • Research Contribution</div>
+                <h2 class="text-4xl md:text-5xl font-black mt-3">From Prototype to Research</h2>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-8">
+                <div class="glass rounded-[2.5rem] p-8">
+                    <h3 class="text-xl font-extrabold">Research Gap Addressed</h3>
+                    <ul class="mt-6 space-y-4 text-sm text-slate-400 leading-relaxed">
+                        <li>• QR/2D serialization identifies packages but does not independently authenticate the
+                            optical reference.</li>
+                        <li>• Physical PUF approaches can require specialized materials, readers or manufacturing
+                            processes.</li>
+                        <li>• Optical authentication must tolerate ordinary camera capture, orientation, perspective,
+                            printing and resampling effects.</li>
+                        <li>• Evaluation needs to distinguish engineering validation from statistically meaningful field
+                            accuracy.</li>
+                    </ul>
+                </div>
+
+                <div class="glass rounded-[2.5rem] p-8">
+                    <h3 class="text-xl font-extrabold">Key Technical Contribution</h3>
+                    <ul class="mt-6 space-y-4 text-sm text-slate-400 leading-relaxed">
+                        <li><span class="text-blue-400 font-bold">01.</span> Per-package 128-bit authentication
+                            identifier.</li>
+                        <li><span class="text-blue-400 font-bold">02.</span> Product ID + Auth ID binding through
+                            server-held HMAC-SHA256.</li>
+                        <li><span class="text-blue-400 font-bold">03.</span> Printable software-generated optical
+                            fingerprint.</li>
+                        <li><span class="text-blue-400 font-bold">04.</span> Marker-constrained geometric normalization.
+                        </li>
+                        <li><span class="text-blue-400 font-bold">05.</span> Multi-scale / multi-orientation NCC with
+                            secondary ORB/RANSAC evidence.</li>
+                        <li><span class="text-blue-400 font-bold">06.</span> NCC safety floor and explicit failure
+                            states.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="glass rounded-[2.5rem] p-8">
+                <h3 class="text-xl font-extrabold text-center">Research / Development Progression</h3>
+                <div class="grid md:grid-cols-4 gap-4 mt-8">
+                    <div class="flow-card rounded-2xl p-5 text-center">
+                        <p class="section-label">Phase 1</p>
+                        <p class="font-bold mt-2">Concept</p>
+                        <p class="text-xs text-slate-500 mt-2">Package optical authentication + QR serialization</p>
+                    </div>
+                    <div class="flow-card rounded-2xl p-5 text-center">
+                        <p class="section-label">Phase 2</p>
+                        <p class="font-bold mt-2">Prototype</p>
+                        <p class="text-xs text-slate-500 mt-2">Flask + SQLite + OpenCV + web interface</p>
+                    </div>
+                    <div class="flow-card rounded-2xl p-5 text-center">
+                        <p class="section-label">Phase 3</p>
+                        <p class="font-bold mt-2">Security Upgrade</p>
+                        <p class="text-xs text-slate-500 mt-2">V2 HMAC binding + package-specific Auth ID</p>
+                    </div>
+                    <div class="flow-card rounded-2xl p-5 text-center">
+                        <p class="section-label">Phase 4</p>
+                        <p class="font-bold mt-2">Patent / Research</p>
+                        <p class="text-xs text-slate-500 mt-2">Technical disclosure, prior-art review and validation</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PATENT -->
+        <section id="patent" class="space-y-10">
+            <div class="text-center">
+                <div class="section-label">09 • Intellectual Property</div>
+                <h2 class="text-4xl md:text-5xl font-black mt-3">
+                    Patent <span class="gradient-text">Readiness</span>
+                </h2>
+            </div>
+
+            <div class="glass rounded-[2.5rem] p-8 md:p-10 border border-purple-500/20">
+                <div class="grid lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-2">
+                        <p class="text-[10px] uppercase tracking-widest text-purple-400 font-black">Working invention
+                            title</p>
+                        <h3 class="text-2xl font-black mt-3 leading-snug">
+                            A Method and System for Pharmaceutical Package Authentication Using QR Serialization and
+                            Cryptographically Bound Optical Fingerprints
+                        </h3>
+                        <p class="text-slate-400 leading-relaxed mt-5">
+                            A technical patent disclosure has been prepared around the implemented Version-2
+                            architecture, including the package-specific authentication identifier,
+                            HMAC-SHA256 binding, optical fingerprint derivation, canonical image extraction,
+                            multi-scale comparison and gated authentication logic.
+                        </p>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div class="flow-card rounded-2xl p-5">
+                            <p class="section-label">Status</p>
+                            <p class="font-bold mt-2">Technical disclosure drafted</p>
+                            <p class="text-[10px] text-slate-500 mt-1">For professional patent review</p>
+                        </div>
+                        <div class="flow-card rounded-2xl p-5">
+                            <p class="section-label">Prior art</p>
+                            <p class="font-bold mt-2">Reviewed</p>
+                            <p class="text-[10px] text-slate-500 mt-1">Optical anti-counterfeiting / PUF literature and
+                                patents</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-4 mt-8">
+                    <div class="flow-card rounded-2xl p-5">
+                        <i class="fas fa-file-lines text-blue-400"></i>
+                        <p class="font-bold mt-3">Detailed disclosure</p>
+                        <p class="text-xs text-slate-500 mt-1">Architecture, method, experiments and advantages
+                            documented.</p>
+                    </div>
+                    <div class="flow-card rounded-2xl p-5">
+                        <i class="fas fa-diagram-project text-purple-400"></i>
+                        <p class="font-bold mt-3">Technical drawings</p>
+                        <p class="text-xs text-slate-500 mt-1">System architecture, verification pipeline, cryptographic
+                            derivation and decision flow.</p>
+                    </div>
+                    <div class="flow-card rounded-2xl p-5">
+                        <i class="fas fa-scale-balanced text-emerald-400"></i>
+                        <p class="font-bold mt-3">Claim direction</p>
+                        <p class="text-xs text-slate-500 mt-1">Focused on the specific technical combination rather than
+                            the broad idea of QR + image matching.</p>
+                    </div>
+                </div>
+
+                <div
+                    class="mt-8 p-5 rounded-2xl bg-amber-500/5 border border-amber-500/15 text-xs text-slate-500 leading-relaxed">
+                    <strong class="text-amber-300">Important:</strong>
+                    The project should not be presented as having a granted patent or guaranteed patentability.
+                    Novelty, inventive step, claim scope, inventorship and final filing status require review by
+                    a registered patent professional.
+                </div>
+            </div>
+        </section>
+
+        <!-- LIMITATIONS + FUTURE -->
+        <section class="space-y-10">
+            <div class="text-center">
+                <div class="section-label">10 • Critical Evaluation</div>
+                <h2 class="text-4xl md:text-5xl font-black mt-3">Limitations & Future Scope</h2>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-8">
+                <div class="glass rounded-[2.5rem] p-8 border-t-4 border-amber-500">
+                    <h3 class="text-xl font-extrabold">Current Limitations</h3>
+                    <ul class="mt-6 space-y-4 text-sm text-slate-400 leading-relaxed">
+                        <li>• A visible software-generated optical token can still be photographed and potentially
+                            reproduced.</li>
+                        <li>• The current validation suite is engineering-focused rather than a large field study.</li>
+                        <li>• Real-world performance needs broader testing across printers, substrates, cameras,
+                            lighting, curvature and deliberate reproductions.</li>
+                        <li>• Threshold values are implementation parameters and are not claimed to be universally
+                            optimal.</li>
+                    </ul>
+                </div>
+
+                <div class="glass rounded-[2.5rem] p-8 border-t-4 border-emerald-500">
+                    <h3 class="text-xl font-extrabold">Next Development Steps</h3>
+                    <ul class="mt-6 space-y-4 text-sm text-slate-400 leading-relaxed">
+                        <li>• Build a larger, independently collected physical-package dataset.</li>
+                        <li>• Evaluate multiple printers, papers, cameras, lighting conditions and package curvatures.
+                        </li>
+                        <li>• Perform ablation studies: NCC-only, ORB-only, fused model and gated model.</li>
+                        <li>• Report confusion matrix, ROC/PR analysis and threshold sensitivity.</li>
+                        <li>• Investigate stronger anti-replay and print/copy-channel characterization.</li>
+                        <li>• Continue formal patentability and claim analysis with professional counsel.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- TECH STACK -->
+        <section class="space-y-8">
+            <div class="text-center">
+                <div class="section-label">11 • Technology Stack</div>
+                <h2 class="text-4xl font-black mt-3">Built With</h2>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-3">
+                <span class="chip px-5 py-3 rounded-2xl text-sm"><i
+                        class="fab fa-python mr-2 text-blue-400"></i>Python</span>
+                <span class="chip px-5 py-3 rounded-2xl text-sm"><i
+                        class="fas fa-flask mr-2 text-blue-400"></i>Flask</span>
+                <span class="chip px-5 py-3 rounded-2xl text-sm"><i
+                        class="fas fa-eye mr-2 text-blue-400"></i>OpenCV</span>
+                <span class="chip px-5 py-3 rounded-2xl text-sm"><i
+                        class="fas fa-database mr-2 text-blue-400"></i>SQLite</span>
+                <span class="chip px-5 py-3 rounded-2xl text-sm"><i
+                        class="fab fa-html5 mr-2 text-orange-400"></i>HTML5</span>
+                <span class="chip px-5 py-3 rounded-2xl text-sm"><i
+                        class="fab fa-js mr-2 text-yellow-400"></i>JavaScript</span>
+                <span class="chip px-5 py-3 rounded-2xl text-sm"><i class="fas fa-wind mr-2 text-cyan-400"></i>Tailwind
+                    CSS</span>
+                <span class="chip px-5 py-3 rounded-2xl text-sm"><i
+                        class="fas fa-lock mr-2 text-purple-400"></i>HMAC-SHA256</span>
+                <span class="chip px-5 py-3 rounded-2xl text-sm"><i
+                        class="fas fa-fingerprint mr-2 text-emerald-400"></i>ORB / RANSAC / NCC</span>
+            </div>
+        </section>
+
+        <!-- TEAM -->
+        <section id="team" class="space-y-8 pt-10 border-t border-slate-800">
+            <div class="text-center">
+                <div class="section-label">12 • Academic Credits</div>
+                <h2 class="text-4xl font-black mt-3">Project Team</h2>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-6">
+                <div class="glass px-10 py-8 rounded-[2rem] text-center border-b-4 border-blue-600 min-w-[280px]">
+                    <p class="section-label">Project Guide</p>
+                    <p class="font-black text-xl mt-3">Dr. Vaishali Chauhan</p>
+                    <p class="text-xs text-slate-500 mt-2">Manipal University Jaipur</p>
+                </div>
+
+                <div class="glass px-10 py-8 rounded-[2rem] text-center border-b-4 border-purple-600 min-w-[280px]">
+                    <p class="section-label">Student / Developer</p>
+                    <p class="font-black text-xl mt-3">Ayush Goyal</p>
+                    <p class="text-xs text-slate-500 mt-2">CSE • MUJ • 2427030630</p>
+                </div>
+            </div>
+        </section>
+
     </main>
 
-    <footer class="py-12 text-center bg-black/40 border-t border-slate-900">
-        <p class="text-slate-600 text-[10px] font-bold tracking-[0.3em] uppercase mb-2">Manipal University Jaipur</p>
-        <p class="text-slate-500 text-[9px] font-medium tracking-[0.2em] uppercase opacity-50">Department of Computer
-            Science & Engineering • 2026</p>
+    <footer class="py-12 text-center bg-black/30 border-t border-slate-900">
+        <p class="text-slate-400 text-[10px] font-black tracking-[.3em] uppercase mb-2">
+            PUF MedAuth • Manipal University Jaipur
+        </p>
+        <p class="text-slate-600 text-[9px] tracking-[.2em] uppercase">
+            Department of Computer Science & Engineering • PBL 2026
+        </p>
     </footer>
 
     <script>
-        // TIMER LOGIC
+        // 10-minute presentation timer
         let sec = 0;
         let timer = null;
+
         function startTimer() {
             timer = setInterval(() => {
                 sec++;
-                let m = Math.floor(sec / 60);
-                let s = sec % 60;
-                document.getElementById('displayTime').innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+                const m = Math.floor(sec / 60);
+                const s = sec % 60;
 
-                if (sec >= 480 && sec < 600) { // 8-10 Mins Warning
+                document.getElementById('displayTime').innerText =
+                    `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+
+                if (sec >= 480 && sec < 600) {
                     document.getElementById('timerContainer').classList.add('timer-warning');
-                    document.getElementById('timerIcon').classList.replace('fa-hourglass-start', 'fa-hourglass-half');
-                } else if (sec >= 600) { // 10 Mins Stop
+                    document.getElementById('timerIcon').classList.replace(
+                        'fa-hourglass-start', 'fa-hourglass-half'
+                    );
+                } else if (sec >= 600) {
                     clearInterval(timer);
-                    document.getElementById('timerContainer').classList.replace('timer-warning', 'timer-stop');
-                    document.getElementById('displayTime').innerText = "10:00";
-                    document.getElementById('timerIcon').classList.replace('fa-hourglass-half', 'fa-hourglass-end');
+                    document.getElementById('timerContainer').classList.replace(
+                        'timer-warning', 'timer-stop'
+                    );
+                    document.getElementById('displayTime').innerText = '10:00';
+                    document.getElementById('timerIcon').classList.replace(
+                        'fa-hourglass-half', 'fa-hourglass-end'
+                    );
                 }
             }, 1000);
         }
 
-        // RESULTS CHART (Demo Data)
-        const ctx = document.getElementById('resultsChart').getContext('2d');
+        // Validation chart — deliberately shows validation coverage, NOT accuracy.
+        const ctx = document.getElementById('validationChart').getContext('2d');
+
         new Chart(ctx, {
-            type: 'bar',
+            type: 'doughnut',
             data: {
-                labels: ['Existing System', 'Our Solution'],
+                labels: ['Passed', 'Remaining'],
                 datasets: [{
-                    data: [70, 92],
-                    backgroundColor: ['#1e293b', '#3b82f6'],
-                    borderRadius: 15,
-                    barThickness: 50
+                    data: [19, 0],
+                    backgroundColor: ['#22c55e', '#1e293b'],
+                    borderWidth: 0,
+                    hoverOffset: 4
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                    y: { beginAtZero: true, grid: { color: '#ffffff05' }, ticks: { color: '#475569' } },
-                    x: { grid: { display: false }, ticks: { color: '#475569' } }
+                cutout: '72%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#94a3b8',
+                            padding: 18,
+                            font: { family: 'Plus Jakarta Sans', size: 11, weight: '600' }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: (item) => `${item.label}: ${item.raw}`
+                        }
+                    }
                 }
-            }
+            },
+            plugins: [{
+                id: 'centerText',
+                beforeDraw(chart) {
+                    const { ctx, chartArea: { left, right, top, bottom } } = chart;
+                    const x = (left + right) / 2;
+                    const y = (top + bottom) / 2;
+
+                    ctx.save();
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+
+                    ctx.fillStyle = '#f8fafc';
+                    ctx.font = '800 34px Plus Jakarta Sans';
+                    ctx.fillText('19/19', x, y - 8);
+
+                    ctx.fillStyle = '#64748b';
+                    ctx.font = '600 11px Plus Jakarta Sans';
+                    ctx.fillText('VALIDATION TESTS', x, y + 25);
+
+                    ctx.restore();
+                }
+            }]
         });
     </script>
 </body>
